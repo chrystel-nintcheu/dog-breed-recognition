@@ -20,6 +20,9 @@ dog-breed-recognition/
 ├── style.css              # Apple-inspired responsive design
 ├── package.json           # Dev dependencies (Playwright, serve)
 ├── playwright.config.ts   # Test configuration
+├── cloud-init/
+│   ├── user-data-caddy.yaml    # Cloud-init config for Caddy VM
+│   └── provision-multipass.sh  # One-command VM launcher
 └── test/
     ├── helpers.ts          # CDN mocks, test fixtures, instrumentation
     ├── structure.spec.ts   # 10 page structure tests
@@ -64,6 +67,48 @@ cp index.html app.js style.css /var/www/html/dog-breed-recognition/
 ### Any Static Host (Netlify, Vercel, Cloudflare Pages)
 
 Point the deploy to the repo root. No build command needed — the entry point is `index.html`.
+
+### Caddy on a Multipass VM (cloud-init)
+
+The `cloud-init/` directory contains everything needed to deploy the app on a fresh Ubuntu 24.04 VM behind the [Caddy](https://caddyserver.com/) web server, using [Multipass](https://multipass.run/).
+
+**Prerequisites**: [Multipass](https://multipass.run/install) installed on your host machine.
+
+**One-command deploy**:
+
+```bash
+./cloud-init/provision-multipass.sh
+```
+
+This will:
+
+1. Launch an Ubuntu 24.04 VM (`dog-breed`) with 2 CPU / 2 GB RAM / 10 GB disk.
+2. Install Caddy from the official apt repository.
+3. `git clone` the app from GitHub into `/var/www/dog-breed`.
+4. Configure Caddy to serve the app on port 80.
+5. Run a health check with retry to confirm the app is reachable.
+6. Print the VM's IP address — open `http://<VM_IP>/` in your browser.
+
+**What to expect**:
+
+- Provisioning takes ~2–3 minutes (package updates + Caddy install + git clone).
+- The script verifies deployment automatically (sentinel file + HTTP check).
+- If Caddy is still starting, the script prints a warning with a manual check command.
+- The app works identically to the local version — upload a dog photo and get a breed prediction.
+
+**Manual launch** (without the provisioner script):
+
+```bash
+multipass launch 24.04 --name dog-breed \
+  --cloud-init cloud-init/user-data-caddy.yaml \
+  --cpus 2 --memory 2G --disk 10G
+```
+
+**Cleanup**:
+
+```bash
+multipass delete dog-breed --purge
+```
 
 ## Run Tests
 
