@@ -1,30 +1,195 @@
+/* ── Reset & Base ─────────────────────────────────── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: "Arial", sans-serif;
-    text-align: center;
-    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* ── Layout ──────────────────────────────────────── */
 main {
-    width: 80%;
-    margin: auto;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 24px 40px;
 }
 
-.file-section input[type="file"] {
-    margin: 20px 0;
+/* ── Hero ─────────────────────────────────────────── */
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #1d1d1f;
+}
+
+.subtitle {
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #86868b;
+    letter-spacing: 0.01em;
+}
+
+/* ── Card ─────────────────────────────────────────── */
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Upload ───────────────────────────────────────── */
+.file-section {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+#file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 980px;
+    background: #0071e3;
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    user-select: none;
+}
+
+.upload-btn:hover {
+    background: #0077ed;
+}
+
+.upload-btn:active {
+    transform: scale(0.97);
+}
+
+.upload-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ── Error ────────────────────────────────────────── */
+.error {
+    color: #ff3b30;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: 12px;
+    min-height: 1.2em;
+}
+
+/* ── Image Frame ──────────────────────────────────── */
+.image-frame {
+    position: relative;
+    background: #f5f5f7;
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #image {
     max-width: 100%;
     height: auto;
+    display: block;
+    border-radius: 16px;
 }
 
+#image[src=""],
+#image:not([src]) {
+    display: none;
+}
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #86868b;
+    padding: 48px 24px;
+}
+
+.placeholder svg {
+    opacity: 0.4;
+}
+
+.placeholder span {
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+#image[src]:not([src=""]) ~ .placeholder {
+    display: none;
+}
+
+/* ── Prediction ───────────────────────────────────── */
 #prediction {
     margin-top: 20px;
-    font-size: 20px;
-    color: blue;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: rgb(0, 0, 255);
+    text-align: center;
+    min-height: 1.5em;
+    line-height: 1.5;
 }
 
-.error {
-    color: red;
-    margin-top: 10px;
+#prediction:not(:empty) {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #e8f0fe, #f0e6ff);
+    border-radius: 12px;
+    color: #1d1d1f;
+}
+
+/* ── Footer ───────────────────────────────────────── */
+footer {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 0.75rem;
+    color: #86868b;
+    letter-spacing: 0.01em;
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 480px) {
+    main {
+        padding: 40px 16px 32px;
+    }
+
+    h1 {
+        font-size: 1.625rem;
+    }
+
+    .card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
 }

@@ -7,22 +7,40 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<!-- Load the MobileNet model -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 </head>
 <body>
     <main>
-        <h1>Dog Breed Recognition</h1>
-	<h5>By chrystel.nintcheu@polymtl.ca - DEMO APP</h5>
-        <section class="file-section">
-            <input type="file" id="file-input" accept="image/*">
-            <div class="error" id="input-error"></div>
-        </section>
-        <section class="image-section">
-	     <div id="prediction"></div>
-            <img id="image" alt="Upload an image for breed recognition" />
-        </section>
+        <div class="hero">
+            <h1>Dog Breed Recognition</h1>
+            <p class="subtitle">By chrystel.nintcheu@polymtl.ca — DEMO APP</p>
+        </div>
+
+        <div class="card">
+            <section class="file-section">
+                <label class="upload-btn" for="file-input">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Choose Image
+                </label>
+                <input type="file" id="file-input" accept="image/*">
+                <div class="error" id="input-error"></div>
+            </section>
+
+            <section class="image-section">
+                <div class="image-frame">
+                    <img id="image" alt="Upload an image for breed recognition" />
+                    <div class="placeholder" id="placeholder">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <span>Your image will appear here</span>
+                    </div>
+                </div>
+                <div id="prediction"></div>
+            </section>
+        </div>
+
+        <footer>
+            Powered by TensorFlow.js &amp; MobileNet
+        </footer>
     </main>
     <script src="app.js"></script>
 </body>

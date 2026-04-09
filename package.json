@@ -1,0 +1,13 @@
+{
+  "name": "dog-breed-recognition",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright test --reporter=html",
+    "serve": "serve . -l 3333 --no-clipboard"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "serve": "^14.2.0"
+  }
+}
