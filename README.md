@@ -120,6 +120,6 @@ npm test
 
 The test suite covers page structure, file uploads, real model classification (requires network), and regression tests for previously fixed bugs.
 
-## Author
+## License
 
-chrystel.nintcheu@polymtl.ca
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
