@@ -1,0 +1,79 @@
+#cloud-config
+# =============================================================================
+# Dog Breed Recognition — Cloud-Init (Caddy Web Server)
+# =============================================================================
+#
+# FR: Configuration cloud-init pour une VM Ubuntu 24.04.
+#     Installe Caddy et déploie l'application Dog Breed Recognition
+#     via git clone depuis le dépôt GitHub public.
+#
+# EN: Cloud-init configuration for an Ubuntu 24.04 VM.
+#     Installs Caddy and deploys the Dog Breed Recognition app
+#     via git clone from the public GitHub repository.
+#
+# Usage:
+#   multipass launch 24.04 --name dog-breed \
+#     --cloud-init cloud-init/user-data-caddy.yaml \
+#     --cpus 2 --memory 2G --disk 10G
+# =============================================================================
+
+package_update: true
+package_upgrade: false
+
+packages:
+  - git
+  - curl
+  - ca-certificates
+  - debian-keyring
+  - debian-archive-keyring
+  - apt-transport-https
+
+# FR: Seul le Caddyfile est écrit via write_files (4 lignes, aucun caractère spécial YAML).
+#     Le code applicatif est cloné depuis GitHub dans runcmd.
+# EN: Only the Caddyfile is written via write_files (4 lines, no YAML special chars).
+#     Application code is cloned from GitHub in runcmd.
+write_files:
+  - path: /etc/caddy/Caddyfile
+    content: |
+      :80 {
+          root * /var/www/dog-breed
+          file_server
+      }
+    owner: root:root
+    permissions: '0644'
+
+runcmd:
+  # --- Install Caddy via official apt repository ---
+  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+  - apt-get update
+  - apt-get install -y caddy
+
+  # --- Clone application from public GitHub repo ---
+  - git clone https://github.com/chrystel-nintcheu/dog-breed-recognition.git /var/www/dog-breed
+
+  # --- Set ownership for Caddy's systemd user ---
+  - chown -R caddy:caddy /var/www/dog-breed
+
+  # --- Validate Caddyfile before starting ---
+  - caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+
+  # --- Enable and start Caddy ---
+  - systemctl enable caddy
+  - systemctl restart caddy
+
+  # --- Health check with retry (backoff) ---
+  - |
+    for i in 1 2 3 4 5; do
+      curl -sf http://localhost/ | grep -q "Dog Breed Recognition" && break || sleep "$i"
+    done
+
+  # --- Write sentinel file ---
+  - echo "dog-breed-recognition deployed via Caddy — $(date)" > /etc/dog-breed-ready
+
+final_message: |
+  ============================================
+  Dog Breed Recognition — Deployed via Caddy
+  URL: http://<VM_IP>/
+  Status: cat /etc/dog-breed-ready
+  ============================================
